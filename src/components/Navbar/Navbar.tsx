@@ -153,6 +153,14 @@ const NavbarComp = () => {
         >
           TV Shows
         </NavbarLink>
+
+        <NavbarLink
+          className="cursor-pointer"
+          onClick={() => navigate("/favorites")}
+          active={pathname === "/favorites"}
+        >
+          Favorites
+        </NavbarLink>
       </NavbarCollapse>
 
       {/* Search */}

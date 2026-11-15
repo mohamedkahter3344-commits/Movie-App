@@ -5,6 +5,7 @@ import Movies from "../pages/Movies/Movies";
 import TV from "../pages/TV/TV";
 import NotFound from "../pages/Not-Found/NotFound";
 import CardDetails from "../pages/CardDetails/CardDetails";
+import Favorites from "../pages/Favorites/Favorites";
 
 export const Router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ export const Router = createBrowserRouter([
       {
         path: "/tvShows",
         element: <TV />,
+      },
+      {
+        path: "/favorites",
+        element: <Favorites />,
       },
       {
         path: "*",

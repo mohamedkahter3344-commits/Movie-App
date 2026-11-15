@@ -19,6 +19,8 @@ import {
 import { getCardDetails } from "../../apis/CardDetailsApi/CardDetailsApi";
 import InfoCard from "../../components/InfoCard/InfoCard";
 import VideoMedia from "../../components/VideoMedia/VideoMedia";
+import CreditsMediaComp from "../../components/CreditsMediaComp/CreditsMediaComp";
+import AlsoLikeMedia from "../../components/AlsoLikeMedia/AlsoLikeMedia";
 
 const IMAGE_URL = "https://image.tmdb.org/t/p";
 
@@ -396,7 +398,11 @@ const CardDetails = () => {
           </div>
         )}
 
+        <CreditsMediaComp postId={id} categoryType={type}/>
+
         <VideoMedia videoId={id} categoryType={type}/>
+
+        <AlsoLikeMedia categoryType={type} currentId={id}/>
       </section>
     </main>
   );
