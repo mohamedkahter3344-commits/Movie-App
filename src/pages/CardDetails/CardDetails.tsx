@@ -1,6 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+
 import {
   Star,
   CalendarDays,
@@ -17,10 +18,12 @@ import {
 } from "lucide-react";
 
 import { getCardDetails } from "../../apis/CardDetailsApi/CardDetailsApi";
+
 import InfoCard from "../../components/InfoCard/InfoCard";
 import VideoMedia from "../../components/VideoMedia/VideoMedia";
 import CreditsMediaComp from "../../components/CreditsMediaComp/CreditsMediaComp";
 import AlsoLikeMedia from "../../components/AlsoLikeMedia/AlsoLikeMedia";
+import FavoriteButtonUi from "../../components/FavoriteButtonUi/FavoriteButtonUi";
 
 const IMAGE_URL = "https://image.tmdb.org/t/p";
 
@@ -50,8 +53,10 @@ const CardDetails = () => {
       <main className="min-h-screen bg-(--bg-primary) px-4 py-12">
         <div className="mx-auto max-w-7xl animate-pulse">
           <div className="h-100 rounded-3xl bg-(--bg-card)" />
+
           <div className="mt-8 grid gap-5 md:grid-cols-[280px_1fr]">
             <div className="h-100 rounded-2xl bg-(--bg-card)" />
+
             <div className="space-y-5">
               <div className="h-10 w-2/3 rounded-lg bg-(--bg-card)" />
               <div className="h-5 w-1/3 rounded-lg bg-(--bg-card)" />
@@ -155,7 +160,7 @@ const CardDetails = () => {
           {/* Back Button */}
           <button
             onClick={() => navigate(-1)}
-            className="mb-10 flex w-fit items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-red-600 hover:border-red-600"
+            className="mb-10 flex w-fit items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition hover:border-red-600 hover:bg-red-600"
           >
             <ArrowLeft size={18} />
             Back
@@ -165,18 +170,28 @@ const CardDetails = () => {
 
             {/* Poster */}
             <div className="mx-auto w-full max-w-62.5 md:mx-0 lg:max-w-[320px]">
-              <div className="overflow-hidden rounded-2xl border border-white/20 shadow-2xl shadow-black/50">
+              <div className="group relative overflow-hidden rounded-2xl border border-white/20 shadow-2xl shadow-black/50">
+
                 {poster ? (
                   <img
                     src={poster}
                     alt={title}
-                    className="aspect-2/3 w-full object-cover transition duration-700 hover:scale-105"
+                    className="aspect-2/3 w-full object-cover transition duration-700 group-hover:scale-105"
                   />
                 ) : (
                   <div className="flex aspect-2/3 items-center justify-center bg-gray-800 text-white">
                     <Clapperboard size={60} />
                   </div>
                 )}
+
+                {/* Favorite Button */}
+                <div className="absolute left-3 top-3 z-20">
+                  <FavoriteButtonUi />
+                </div>
+
+                {/* Poster Gradient */}
+                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-black/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
               </div>
             </div>
 
@@ -190,7 +205,7 @@ const CardDetails = () => {
               </div>
 
               {/* Title */}
-              <h1 className="mb-3 text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+              <h1 className="mb-3 text-4xl leading-tight font-black sm:text-5xl lg:text-6xl">
                 {title}
               </h1>
 
@@ -257,7 +272,9 @@ const CardDetails = () => {
 
               {/* Overview */}
               <div className="mb-8">
-                <h2 className="mb-3 text-xl font-bold">Overview</h2>
+                <h2 className="mb-3 text-xl font-bold">
+                  Overview
+                </h2>
 
                 <p className="max-w-2xl text-sm leading-8 text-gray-300 sm:text-base">
                   {details.overview || "No overview available for this title."}
@@ -311,6 +328,7 @@ const CardDetails = () => {
           </p>
         </div>
 
+        {/* Information Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
           <InfoCard
@@ -398,16 +416,18 @@ const CardDetails = () => {
           </div>
         )}
 
-        <CreditsMediaComp postId={id} categoryType={type}/>
+        {/* Credits */}
+        <CreditsMediaComp postId={id} categoryType={type} />
 
-        <VideoMedia videoId={id} categoryType={type}/>
+        {/* Videos */}
+        <VideoMedia videoId={id} categoryType={type} />
 
-        <AlsoLikeMedia categoryType={type} currentId={id}/>
+        {/* Similar Media */}
+        <AlsoLikeMedia categoryType={type} currentId={id} />
+
       </section>
     </main>
   );
 };
-
-
 
 export default CardDetails;

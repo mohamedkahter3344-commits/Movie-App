@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 import type { Movie } from "../../types/TrendingMovies.t";
 import type { TV } from "../../types/TV.t";
-
+import FavoriteButtonUi from "../FavoriteButtonUi/FavoriteButtonUi";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
@@ -56,7 +56,7 @@ const CardItem = ({ type, movie }: MovieCardProps) => {
   return (
     <Link
       to={detailsPath}
-      className="group relative block w-full overflow-hidden rounded-2xl bg-(--bg-card) border border-(--border-color) shadow-sm hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-2 transition-all duration-500"
+      className="group relative block w-full overflow-hidden rounded-2xl border border-(--border-color) bg-(--bg-card) shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/20"
     >
       {/* Poster */}
       <div className="relative aspect-2/3 overflow-hidden">
@@ -64,43 +64,47 @@ const CardItem = ({ type, movie }: MovieCardProps) => {
           src={poster}
           alt={title}
           loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
 
         {/* Dark Gradient */}
         <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-black/10 opacity-90" />
 
         {/* Top Badges */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+        <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between">
           {/* Release Year */}
-          <span className="flex items-center gap-1.5 rounded-lg bg-black/50 backdrop-blur-md border border-white/10 px-2.5 py-1.5 text-xs font-medium text-white">
+          <span className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/50 px-2.5 py-1.5 text-xs font-medium text-white backdrop-blur-md">
             <CalendarDays size={13} />
             {releaseYear}
           </span>
 
           {/* Rating */}
-          <span className="flex items-center gap-1.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 px-2.5 py-1.5 text-xs font-bold text-yellow-400">
+          <span className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/60 px-2.5 py-1.5 text-xs font-bold text-yellow-400 backdrop-blur-md">
             <Star size={14} fill="currentColor" />
             {rating}
           </span>
         </div>
 
+        {/* Favorite Button */}
+
+        <FavoriteButtonUi/>
+
         {/* Hover Play Button */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-          <div className="w-14 h-14 rounded-full bg-red-600 text-white flex items-center justify-center shadow-xl shadow-red-600/30 scale-75 group-hover:scale-100 transition-transform duration-500">
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-500 group-hover:opacity-100">
+          <div className="flex h-14 w-14 scale-75 items-center justify-center rounded-full bg-red-600 text-white shadow-xl shadow-red-600/30 transition-transform duration-500 group-hover:scale-100">
             <Play size={23} fill="currentColor" />
           </div>
         </div>
 
         {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+        <div className="absolute right-0 bottom-0 left-0 p-4 sm:p-5">
           {/* Title */}
-          <h3 className="text-lg sm:text-xl font-extrabold text-white leading-tight line-clamp-2 mb-2 group-hover:text-red-400 transition-colors duration-300">
+          <h3 className="mb-2 line-clamp-2 text-lg leading-tight font-extrabold text-white transition-colors duration-300 group-hover:text-red-400 sm:text-xl">
             {title}
           </h3>
 
           {/* Overview */}
-          <p className="text-xs sm:text-sm text-gray-300 leading-relaxed line-clamp-2 mb-4">
+          <p className="mb-4 line-clamp-2 text-xs leading-relaxed text-gray-300 sm:text-sm">
             {movie.overview || "No description available."}
           </p>
 
@@ -110,7 +114,7 @@ const CardItem = ({ type, movie }: MovieCardProps) => {
               View Details
             </span>
 
-            <span className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white group-hover:bg-red-600 transition-colors duration-300">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-colors duration-300 group-hover:bg-red-600">
               <ArrowUpRight size={17} />
             </span>
           </div>

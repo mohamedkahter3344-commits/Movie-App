@@ -1,13 +1,7 @@
 -Reviews in card details
 
--sperate getmoviesByCategory and getTvByCategory in components
-
--search in movies
-
 -Favorites
 
 -Authntication
-
--Tv Shows
 
 - Book Ticket (Optinal)

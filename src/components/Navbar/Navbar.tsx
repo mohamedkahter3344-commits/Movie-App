@@ -2,11 +2,6 @@
 import { useEffect, useState } from "react";
 
 import {
-  Avatar,
-  Dropdown,
-  DropdownDivider,
-  DropdownHeader,
-  DropdownItem,
   Navbar,
   NavbarBrand,
   NavbarCollapse,
@@ -15,12 +10,16 @@ import {
   TextInput,
 } from "flowbite-react";
 
-import Logo from "../../assets/images/home-movie-background.png";
-
 import {
   Search,
   Sun,
   Moon,
+  Clapperboard,
+  LogIn,
+  UserPlus,
+  Film,
+  Tv,
+  Heart,
 } from "lucide-react";
 
 import {
@@ -28,20 +27,20 @@ import {
   useNavigate,
 } from "react-router-dom";
 
+import Logo from "../../assets/images/home-movie-background.png";
+
 type Theme = "light" | "dark";
 
 const NavbarComp = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  // Get saved theme
+  // Theme
   const [theme, setTheme] = useState<Theme>(() => {
     const savedTheme = localStorage.getItem("theme");
-
     return savedTheme === "dark" ? "dark" : "light";
   });
 
-  // Apply theme to the entire application
   useEffect(() => {
     document.documentElement.classList.toggle(
       "dark",
@@ -51,135 +50,202 @@ const NavbarComp = () => {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  // Toggle between dark and light
   const toggleTheme = () => {
     setTheme((prev) =>
       prev === "light" ? "dark" : "light"
     );
   };
 
+  const isActive = (path: string) => pathname === path;
+
   return (
-    <Navbar
-      fluid
-      rounded
-      className="my-2 border border-gray-200 bg-white shadow-md transition-colors duration-300 dark:border-gray-700 dark:bg-gray-900"
-    >
-      {/* Logo */}
-      <NavbarBrand>
-        <img
-          src={Logo}
-          className="mr-3 h-9 w-9 rounded-full object-cover"
-          alt="Movie App Logo"
-        />
-
-        <span className="self-center whitespace-nowrap text-xl font-bold text-gray-900 dark:text-white">
-          Movie App
-        </span>
-      </NavbarBrand>
-
-      {/* Right Section */}
-      <div className="flex items-center gap-3 md:order-2">
-
-        {/* Theme Toggle */}
-        <button
-          type="button"
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-          className="rounded-full border border-gray-200 bg-gray-100 p-2.5 text-gray-700 transition-all duration-300 hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-yellow-400 dark:hover:bg-gray-700"
-        >
-          {theme === "dark" ? (
-            <Sun size={20} />
-          ) : (
-            <Moon size={20} />
-          )}
-        </button>
-
-        {/* User Dropdown */}
-        <Dropdown
-          arrowIcon={false}
-          inline
-          label={
-            <Avatar
-              alt="User settings"
-              img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-              rounded
-            />
-          }
-        >
-          <DropdownHeader>
-            <span className="block text-sm">
-              Bonnie Green
-            </span>
-
-            <span className="block truncate text-sm font-medium">
-              name@flowbite.com
-            </span>
-          </DropdownHeader>
-
-          <DropdownItem>Dashboard</DropdownItem>
-          <DropdownItem>Settings</DropdownItem>
-          <DropdownItem>Earnings</DropdownItem>
-
-          <DropdownDivider />
-
-          <DropdownItem>Sign out</DropdownItem>
-        </Dropdown>
-
-        <NavbarToggle />
-      </div>
-
-      {/* Navigation Links */}
-      <NavbarCollapse>
-        <NavbarLink
-          className="cursor-pointer"
+    <header className="sticky  top-0 z-50 px-3 pt-3 sm:px-5">
+      <Navbar
+        fluid
+        rounded
+        className="mx-auto max-w-7xl border border-(--border-color) bg-(--bg-secondary)/95 shadow-lg shadow-black/5 backdrop-blur-xl transition-colors duration-300 dark:shadow-black/20"
+      >
+        {/* Logo */}
+        <NavbarBrand
           onClick={() => navigate("/")}
-          active={pathname === "/"}
+          className="cursor-pointer gap-2"
         >
-          Home
-        </NavbarLink>
+          <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-red-600 shadow-lg shadow-red-600/20">
+            <img
+              src={Logo}
+              alt="Movie App"
+              className="h-full w-full object-cover"
+            />
+          </div>
 
-        <NavbarLink
-          className="cursor-pointer"
-          onClick={() => navigate("/movies")}
-          active={pathname === "/movies"}
+          <div className="flex flex-col">
+            <span className="text-lg font-black tracking-tight text-(--text-primary)">
+              Movie<span className="text-red-600">Hub</span>
+            </span>
+
+            <span className="hidden text-[10px] font-medium tracking-[2px] text-(--text-secondary) sm:block">
+              MOVIE DISCOVERY
+            </span>
+          </div>
+        </NavbarBrand>
+
+        {/* Right Section */}
+        <div className="flex items-center gap-2 md:order-2 sm:gap-3">
+
+          {/* Theme Toggle */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-(--border-color) bg-(--bg-primary) text-(--text-primary) transition-all duration-300 hover:border-red-500 hover:text-red-600"
+          >
+            {theme === "dark" ? (
+              <Sun size={19} />
+            ) : (
+              <Moon size={19} />
+            )}
+          </button>
+
+          {/* Login / Register */}
+          <div className="hidden items-center gap-2 sm:flex">
+            <button
+              type="button"
+              onClick={() => navigate("/auth/login")}
+              className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-(--text-primary) transition hover:bg-(--bg-primary) hover:text-red-600"
+            >
+              <LogIn size={17} />
+              Login
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate("/register")}
+              className="flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-600/20 transition hover:-translate-y-0.5 hover:bg-red-700"
+            >
+              <UserPlus size={17} />
+              Sign Up
+            </button>
+          </div>
+
+          {/* Mobile Login */}
+          <button
+            type="button"
+            onClick={() => navigate("/auth/login")}
+            aria-label="Login"
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-600 text-white transition hover:bg-red-700 sm:hidden"
+          >
+            <LogIn size={19} />
+          </button>
+
+          {/* Navbar Toggle */}
+          <NavbarToggle />
+        </div>
+
+        {/* Navigation */}
+        <NavbarCollapse className="md:items-center">
+
+          <NavbarLink
+            active={isActive("/")}
+            onClick={() => navigate("/")}
+            className="cursor-pointer font-semibold"
+          >
+            <span className="flex items-center gap-2">
+              <Clapperboard size={17} />
+              Home
+            </span>
+          </NavbarLink>
+
+          <NavbarLink
+            active={isActive("/movies")}
+            onClick={() => navigate("/movies")}
+            className="cursor-pointer font-semibold"
+          >
+            <span className="flex items-center gap-2">
+              <Film size={17} />
+              Movies
+            </span>
+          </NavbarLink>
+
+          <NavbarLink
+            active={isActive("/tvShows")}
+            onClick={() => navigate("/tvShows")}
+            className="cursor-pointer font-semibold"
+          >
+            <span className="flex items-center gap-2">
+              <Tv size={17} />
+              TV Shows
+            </span>
+          </NavbarLink>
+
+          <NavbarLink
+            active={isActive("/favorites")}
+            onClick={() => navigate("/favorites")}
+            className="cursor-pointer font-semibold"
+          >
+            <span className="flex items-center gap-2">
+              <Heart size={17} />
+              Favorites
+            </span>
+          </NavbarLink>
+
+          {/* Mobile Search */}
+          <form
+            
+            className="mt-3 flex w-full items-center gap-2 md:hidden"
+          >
+            <TextInput
+              type="text"
+              placeholder="Search movies..."
+              className="w-full"
+            />
+
+            <button
+              type="button"
+              aria-label="Search"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-600 text-white transition hover:bg-red-700"
+            >
+              <Search size={19} />
+            </button>
+          </form>
+
+          {/* Mobile Register */}
+          <div className="mt-3 flex gap-2 sm:hidden">
+            <button
+              type="button"
+              onClick={() => navigate("/register")}
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-red-700"
+            >
+              <UserPlus size={17} />
+              Create Account
+            </button>
+          </div>
+
+        </NavbarCollapse>
+
+        {/* Desktop Search */}
+        <form
+          className="hidden items-center gap-2 md:order-1 md:flex lg:ml-6"
         >
-          Movies
-        </NavbarLink>
+          <div className="relative w-48 lg:w-60 xl:w-72">
+            <TextInput
+              type="text"
+              placeholder="Search movies, series..."
+              
+              className="w-full"
+            />
+          </div>
 
-        <NavbarLink
-          className="cursor-pointer"
-          onClick={() => navigate("/tvShows")}
-          active={pathname === "/tvShows"}
-        >
-          TV Shows
-        </NavbarLink>
+          <button
+            type="button"
+            aria-label="Search"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-600 text-white shadow-md shadow-red-600/20 transition hover:-translate-y-0.5 hover:bg-red-700"
+          >
+            <Search size={19} />
+          </button>
+        </form>
 
-        <NavbarLink
-          className="cursor-pointer"
-          onClick={() => navigate("/favorites")}
-          active={pathname === "/favorites"}
-        >
-          Favorites
-        </NavbarLink>
-      </NavbarCollapse>
-
-      {/* Search */}
-      <div className="flex items-center gap-2">
-        <TextInput
-          type="text"
-          placeholder="Search movies..."
-          className="lg:w-72"
-        />
-
-        <button
-          type="button"
-          aria-label="Search"
-          className="shrink-0 rounded-full p-2 text-gray-700 transition hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800"
-        >
-          <Search size={21} />
-        </button>
-      </div>
-    </Navbar>
+      </Navbar>
+    </header>
   );
 };
 

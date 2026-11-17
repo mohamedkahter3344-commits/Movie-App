@@ -1,6 +1,5 @@
-
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import {  useState } from "react";
 import type { ChangeEvent } from "react";
 import { Clapperboard } from "lucide-react";
 
@@ -17,6 +16,8 @@ import CategoryFilter from "../../components/CategoryFilter/CategoryFilter";
 import MediaInformation from "../../components/MediaInformation/MediaInformation";
 import MediaGrid from "../../components/MediaGrid/MediaGrid";
 import Pagination from "../../components/Pangation/Pangation";
+import SearchMedia from "../../components/SearchMedia/SearchMedia";
+import { getAllSearchMedia } from "../../apis/SearchMedia/SearchMedia";
 
 // Movie Categories
 type MovieCategory =
@@ -48,6 +49,7 @@ const categoryTitles: Record<MovieCategory, string> = {
 };
 
 const Movies = () => {
+  const [searchValue, setSearchValue] = useState("");
   const [category, setCategory] = useState<MovieCategory>("all");
 
   // Pagination Hook
@@ -60,18 +62,15 @@ const Movies = () => {
   } = usePagination();
 
   // Fetch Movies
-  const {
-    isLoading,
-    isFetching,
-    isError,
-    data,
-    error,
-  } = useQuery({
-    queryKey: ["movies", category, currentPage],
+  const { isLoading, isFetching, isError, data, error } = useQuery({
+    queryKey: ["movies", category, currentPage, searchValue],
+
     queryFn: () =>
-      category === "all"
-        ? getAllMovies(currentPage)
-        : getMoviesByCategory(category, currentPage),
+      searchValue
+        ? getAllSearchMedia("movie", searchValue)
+        : category === "all"
+          ? getAllMovies(currentPage)
+          : getMoviesByCategory(category, currentPage),
   });
 
   // Movies Data
@@ -83,27 +82,14 @@ const Movies = () => {
 
   const pageSize = 20;
 
-  const firstItem =
-    totalResults > 0
-      ? (currentPage - 1) * pageSize + 1
-      : 0;
+  const firstItem = totalResults > 0 ? (currentPage - 1) * pageSize + 1 : 0;
 
-  const lastItem = Math.min(
-    currentPage * pageSize,
-    totalResults,
-  );
+  const lastItem = Math.min(currentPage * pageSize, totalResults);
 
   // Change Category
-  function handleCategoryChange(
-    event: ChangeEvent<HTMLSelectElement>,
-  ) {
+  function handleCategoryChange(event: ChangeEvent<HTMLSelectElement>) {
     setCategory(event.target.value as MovieCategory);
     resetPage();
-  }
-
-  // Loading
-  if (isLoading) {
-    return <LoadingSkeleton />;
   }
 
   // Error
@@ -114,11 +100,9 @@ const Movies = () => {
   return (
     <main className="min-h-screen bg-(--bg-primary) px-4 py-10 sm:px-8">
       <div className="mx-auto max-w-7xl">
-
         {/* Page Header */}
         <section className="mb-10">
           <div className="flex flex-col justify-between gap-7 lg:flex-row lg:items-center">
-
             {/* Title & Description */}
             <div>
               <div className="mb-3 flex items-center gap-2">
@@ -151,6 +135,19 @@ const Movies = () => {
           </div>
         </section>
 
+        <SearchMedia
+          mediaType="movie"
+          isPending={isFetching}
+          onSearch={(value) => {
+            setSearchValue(value);
+            resetPage();
+          }}
+          onReset={() => {
+            setSearchValue("");
+            resetPage();
+          }}
+        />
+
         {/* Movies Information */}
         <MediaInformation
           title={categoryTitles[category]}
@@ -159,12 +156,14 @@ const Movies = () => {
           mediaType="movie"
         />
 
-        {/* Movies Grid */}
-        <MediaGrid
-          items={movies}
-          mediaType="movie"
-          isFetching={isFetching}
-        />
+        {/* Movies Results */}
+        {isError ? (
+          <ErrorState typeMedia="movies" errorState={error} />
+        ) : isLoading ? (
+          <LoadingSkeleton />
+        ) : (
+          <MediaGrid items={movies} mediaType="movie" isFetching={isFetching} />
+        )}
 
         {/* Pagination */}
         <Pagination
@@ -178,7 +177,6 @@ const Movies = () => {
           incrementPage={() => incrementPage(totalPages)}
           decrementPage={() => decrementPage(totalPages)}
         />
-
       </div>
     </main>
   );
